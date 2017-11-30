@@ -386,8 +386,10 @@ private: System::Void button2_Click(System::Object^  sender, System::EventArgs^ 
 	String^ fileName = "UtilityHistory.txt";
 	String^ line = textBox4->Text; //gets month
 
+
 	try //attempt to locate file
 	{
+
 		Console::WriteLine("trying to open file {0}...", fileName);
 		StreamReader^ din = File::OpenText(fileName);
 
@@ -398,6 +400,7 @@ private: System::Void button2_Click(System::Object^  sender, System::EventArgs^ 
 			count++;
 			Console::WriteLine("line {0}: {1}", count, str);
 		}
+		din->Close();//close file opened so there isn't a conflict when trying to write to it
 	}
 	catch (Exception^ e)
 	{
@@ -407,6 +410,7 @@ private: System::Void button2_Click(System::Object^  sender, System::EventArgs^ 
 			Console::WriteLine("problem reading file '{0}'", fileName);
 	} //end trying to open file
 
+	
 	if (!is_found)//create file
 	{
 		StreamWriter^ sw = gcnew StreamWriter(fileName);
@@ -421,6 +425,20 @@ private: System::Void button2_Click(System::Object^  sender, System::EventArgs^ 
 		sw->Close();
 
 	}
+	else //append existing file
+	{
+		StreamWriter^ sw = gcnew StreamWriter(fileName, true);
+
+		sw->WriteLine(line);
+		line = textBox1->Text;
+		sw->WriteLine(line);
+		line = textBox2->Text;
+		sw->WriteLine(line);
+		line = label8->Text;
+		sw->WriteLine(line);
+		sw->Close();
+	}
+	
 
 
 	label9->Text = "Saved";  //print 'saved' to application
